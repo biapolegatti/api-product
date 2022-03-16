@@ -1,7 +1,5 @@
 package br.com.product.service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +8,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,6 +24,7 @@ public class ProductService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	
 	// método1
 	public List<Product> find() {
 		return productRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
@@ -37,8 +35,9 @@ public class ProductService {
 
 	public List<ProductDTO> findByDate() {
 		List<Product> products = productRepository.findAll();
-		List<Product> orderedProducts = products.stream().sorted(Comparator.comparing(p -> p.getDate())).collect(Collectors.toList());
-		
+		List<Product> orderedProducts = products.stream().sorted(Comparator.comparing(p -> p.getDate()))
+				.collect(Collectors.toList());
+
 // Forma 1 - utilizando o modelMapper para converter a lista original em uma lista generica (aqui o java compreende que a lista generica será do tipo Product)
 		return modelMapper.map(orderedProducts, List.class);
 		
@@ -84,15 +83,5 @@ public class ProductService {
 		productRepository.deleteById(id);
 
 	}
-
-//		ProductDTO dto = new ProductDTO();
-//		dto.setName(product.getName());
-//		dto.setDescription(product.getDescription());
-//		dto.setPrice(product.getPrice());
-//		dto.setId(product.getId());
-//		dto.setDate(product.getDate().toString());
-//		return dto;
-
-//	
 
 }
