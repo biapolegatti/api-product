@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -13,19 +14,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import br.com.product.exception.ResourceError;
+import br.com.product.exception.ResourceException;
 
 @RestControllerAdvice
-public class RestExpectionHandler {
+public class RestExceptionHandler {
 
-	@ExceptionHandler(ResourceError.class)
+	@ExceptionHandler(ResourceException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ApiError handlerException(ResourceError e, WebRequest request) {
-		return new ApiError.ApiErrorBuilder().status(HttpStatus.BAD_REQUEST.value()).message("Validation failed")
+	public ApiError handlerException(ResourceException e, WebRequest request) {
+		return new ApiError.ApiErrorBuilder()
+				.status(HttpStatus.NOT_FOUND.value())
+				.message("Product not found")
 				.timestamp(new Date()).build();
 
 	}
-
+	
+		
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiError handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
@@ -42,5 +46,15 @@ public class RestExpectionHandler {
 		return new ApiError.ApiErrorBuilder().status(HttpStatus.BAD_REQUEST.value()).message("Validation failed")
 				.timestamp(new Date()).fieldErrors(apiFieldErrors).build();
 	}
-
+	
+	
+//	@ExceptionHandler(ResourceError.class)
+//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//	public ApiError handlerExceptionNotFound(ResourceError e, WebRequest request) {
+//		return new ApiError.ApiErrorBuilder().status(HttpStatus.INTERNAL_SERVER_ERROR.value()).message("Validation failed")
+//				.timestamp(new Date()).build();
+//
+//	}
+//	
+	
 }

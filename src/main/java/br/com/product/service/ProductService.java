@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.product.exception.ResourceException;
 import br.com.product.model.dto.ProductDTO;
 import br.com.product.model.entity.Product;
 import br.com.product.repository.ProductRepository;
@@ -53,13 +54,24 @@ public class ProductService {
 //		List<ProductDTO> teste = products.stream().sorted(Comparator.comparing(p -> p.getDate())).map(p -> modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
 	}
 
+	
+	
+//	public ProductDTO findById(Long id) {
+//		Product product = productRepository.findById(id)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+//
+//		return modelMapper.map(product, ProductDTO.class);
+//	}
+//	
+	
 	public ProductDTO findById(Long id) {
 		Product product = productRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
+				.orElseThrow(() -> new ResourceException("Produt not found"));
+			
 		return modelMapper.map(product, ProductDTO.class);
 	}
-
+	
+	
 	public ProductDTO save(ProductDTO dto) {
 		Product productDB = modelMapper.map(dto, Product.class);
 		productDB = productRepository.save(productDB);
